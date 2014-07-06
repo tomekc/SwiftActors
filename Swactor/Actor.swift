@@ -13,9 +13,11 @@ class Actor {
     
     var dispatchQueue:dispatch_queue_t?
     var queue: Array<Any>
+    var name:String
     
     init() {
         queue = Array()
+        self.name = NSString(format: "Actor-%d", rand()) as String
     }
     
     func put(message:Any) {
@@ -64,11 +66,16 @@ class ActorSystem {
     var serialQueue:dispatch_queue_t
 
     init() {
-        self.serialQueue =  dispatch_queue_create("net.japko.serial", DISPATCH_QUEUE_SERIAL)
+        self.serialQueue =  dispatch_queue_create("net.japko.actor", DISPATCH_QUEUE_SERIAL)
     }
     
     func actorOf(actor:Actor) -> ActorRef {
-        return ActorRef(actor: actor, queue:serialQueue)
+        let name = "net.japko.actors." + actor.name
+        println("Creating actor \(name)")
+        
+        let queue = dispatch_queue_create(name.bridgeToObjectiveC().UTF8String, DISPATCH_QUEUE_SERIAL)
+        
+        return ActorRef(actor: actor, queue:queue)
     }
     
 }
