@@ -10,6 +10,7 @@
 		4010F0F319689A23001C42E7 /* Swactor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4010F0F219689A23001C42E7 /* Swactor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4010F0F919689A23001C42E7 /* Swactor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4010F0ED19689A23001C42E7 /* Swactor.framework */; };
 		4010F10019689A23001C42E7 /* SwactorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010F0FF19689A23001C42E7 /* SwactorTests.swift */; };
+		4010F10A19689A3D001C42E7 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010F10919689A3D001C42E7 /* Actor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		4010F0F819689A23001C42E7 /* SwactorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwactorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4010F0FE19689A23001C42E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4010F0FF19689A23001C42E7 /* SwactorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwactorTests.swift; sourceTree = "<group>"; };
+		4010F10919689A3D001C42E7 /* Actor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Actor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 			children = (
 				4010F0F219689A23001C42E7 /* Swactor.h */,
 				4010F0F019689A23001C42E7 /* Supporting Files */,
+				4010F10919689A3D001C42E7 /* Actor.swift */,
 			);
 			path = Swactor;
 			sourceTree = "<group>";
@@ -210,6 +213,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4010F10A19689A3D001C42E7 /* Actor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +324,7 @@
 		4010F10419689A23001C42E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -329,12 +334,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		4010F10519689A23001C42E7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

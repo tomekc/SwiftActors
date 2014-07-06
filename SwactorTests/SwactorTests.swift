@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Swactor
 
 class SwactorTests: XCTestCase {
     
@@ -19,17 +20,33 @@ class SwactorTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
+
     
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+    
+    class CoffeeOrder {
+        var name:String?
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
+    class Barista : Actor {
+        override func receive(message: AnyObject) {
+            switch message {
+                
+            case let order as CoffeeOrder :
+                NSLog ("I am making coffee \(order)")
+            default:
+                NSLog("Dupa")
+                
+            }
         }
     }
     
+    
+    func testBasic() {
+        
+        let acsys = ActorSystem()
+        
+        let actorek:ActorRef = acsys.actorOf(Barista())
+        actorek ! CoffeeOrder()
+        
+    }
 }
