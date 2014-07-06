@@ -10,3 +10,9 @@ What's included:
   * messages can be anything, *structs* preferred
   
 See *SwactorTests.swift* for example usage.
+
+### Contact me
+
+   * [@tomekcejner](http://twitter.com/tomekcejner) on Twitter
+   * email tomek at japko dot info
+   
