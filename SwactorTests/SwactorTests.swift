@@ -23,16 +23,23 @@ class SwactorTests: XCTestCase {
 
     
     
-    class CoffeeOrder {
-        var name:String?
+    struct CoffeeOrder {
+        var name:String
     }
     
     class Barista : Actor {
-        override func receive(message: AnyObject) {
+        var cashier:ActorRef
+        
+        init(cashier:ActorRef) {
+                self.cashier = cashier
+        }
+        
+        override func receive(message: Any) {
             switch message {
                 
             case let order as CoffeeOrder :
-                NSLog ("I am making coffee \(order)")
+                cashier ! Bill(amount: 200)
+                NSLog ("I am making coffee \(order.name)")
             default:
                 NSLog("Dupa")
                 
@@ -40,13 +47,31 @@ class SwactorTests: XCTestCase {
         }
     }
     
+    struct Bill {
+        var amount:Int
+    }
+    
+    class Cashier : Actor {
+        override func receive(message: Any) {
+            switch message {
+            case let bill as Bill :
+                NSLog("Billing for \(bill.amount)")
+            default:
+                NSLog("Dupa")
+            }
+        }
+        
+    }
     
     func testBasic() {
         
         let acsys = ActorSystem()
         
-        let actorek:ActorRef = acsys.actorOf(Barista())
-        actorek ! CoffeeOrder()
+        let clerk = acsys.actorOf(Cashier())
+        
+        let clintEastwood:ActorRef = acsys.actorOf(Barista(cashier:clerk))
+        clintEastwood ! CoffeeOrder(name:"Latte")
+        clintEastwood ! CoffeeOrder(name:"Mocha")    
         
     }
 }

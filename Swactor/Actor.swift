@@ -12,20 +12,20 @@ import Foundation
 class Actor {
     
     var dispatchQueue:dispatch_queue_t?
-    var queue: Array<AnyObject>
+    var queue: Array<Any>
     
     init() {
         queue = Array()
     }
     
-    func put(message:AnyObject) {
+    func put(message:Any) {
         queue.insert(message, atIndex: 0)
         act()
     }
     
     func act() {
         while (queue.count > 0) {
-            let msg:AnyObject = queue.removeLast()
+            let msg:Any = queue.removeLast()
             dispatch_async(dispatchQueue!) {
                 self.receive(msg)
             }
@@ -33,7 +33,7 @@ class Actor {
     }
     
     // You shall override this function
-    func receive(message:AnyObject) {
+    func receive(message:Any) {
         
     }
     
@@ -54,7 +54,7 @@ class ActorRef {
         self.queue = queue
     }
     
-    func accept(message:AnyObject) {
+    func accept(message:Any) {
         self.actor.receive(message)
     }
 }
@@ -75,7 +75,7 @@ class ActorSystem {
 
 operator infix ! {}
 
-@infix func ! (left:ActorRef, right:AnyObject) -> Void {
+@infix func ! (left:ActorRef, right:Any) -> Void {
         left.accept(right)
 }
 
