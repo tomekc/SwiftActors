@@ -28,6 +28,10 @@ Actors can handle any type of message, and Swift's pattern matching (just like i
 
 Actors are created by extending **Actor** or **ActorUI** class and overriding `receive(message: Any)` method.
 
+## Example project
+
+Look at [Example weather iOS app](https://github.com/tomekc/SwiftActorWeather)
+
 ### Contact me
 
    * [@tomekcejner](http://twitter.com/tomekcejner) on Twitter
