@@ -12,25 +12,19 @@ import Foundation
 class Actor {
     
     var dispatchQueue:dispatch_queue_t?
-    var queue: Array<Any>
+    var mailbox: Array<Any>
     var name:String
+    var busy:Bool
     
     init() {
-        queue = Array()
-        self.name = NSString(format: "Actor-%d", rand()) as String
+        busy = false
+        mailbox = Array()
+        self.name = NSString(format: "Actor-%d-%f", rand(), NSDate.timeIntervalSinceReferenceDate()) as String
     }
     
     func put(message:Any) {
-        queue.insert(message, atIndex: 0)
-        act()
-    }
-    
-    func act() {
-        while (queue.count > 0) {
-            let msg:Any = queue.removeLast()
-            dispatch_async(dispatchQueue!) {
-                self.receive(msg)
-            }
+        dispatch_async(dispatchQueue!) {
+            self.receive(message)
         }
     }
     
@@ -57,25 +51,23 @@ class ActorRef {
     }
     
     func accept(message:Any) {
-        self.actor.receive(message)
+        self.actor.put(message)
     }
 }
 
 class ActorSystem {
-   
-    var serialQueue:dispatch_queue_t
-
-    init() {
-        self.serialQueue =  dispatch_queue_create("net.japko.actor", DISPATCH_QUEUE_SERIAL)
-    }
     
     func actorOf(actor:Actor) -> ActorRef {
-        let name = "net.japko.actors." + actor.name
-        println("Creating actor \(name)")
-        
-        let queue = dispatch_queue_create(name.bridgeToObjectiveC().UTF8String, DISPATCH_QUEUE_SERIAL)
-        
-        return ActorRef(actor: actor, queue:queue)
+        switch(actor) {
+        case is ActorUI:
+            return ActorRef(actor: actor, queue: dispatch_get_main_queue())
+        default:
+            let name = "net.japko.actors." + actor.name
+            let queue = dispatch_queue_create(name.bridgeToObjectiveC().UTF8String, DISPATCH_QUEUE_SERIAL)
+            
+            return ActorRef(actor: actor, queue:queue)
+            
+        }
     }
     
 }
@@ -83,7 +75,7 @@ class ActorSystem {
 operator infix ! {}
 
 @infix func ! (left:ActorRef, right:Any) -> Void {
-        left.accept(right)
+    left.accept(right)
 }
 
 
