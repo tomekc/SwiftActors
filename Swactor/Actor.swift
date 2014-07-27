@@ -9,14 +9,14 @@
 import Foundation
 
 
-class Actor {
+public class Actor {
     
     var dispatchQueue:dispatch_queue_t?
     var mailbox: Array<Any>
     var name:String
     var busy:Bool
     
-    init() {
+    public init() {
         busy = false
         mailbox = Array()
         self.name = NSString(format: "Actor-%d-%f", rand(), NSDate.timeIntervalSinceReferenceDate()) as String
@@ -29,18 +29,20 @@ class Actor {
     }
     
     // You shall override this function
-    func receive(message:Any) {
+    public func receive(message:Any) {
         
     }
     
 }
 
-class ActorUI : Actor {
-    
+public class ActorUI : Actor {
+    public init() {
+        super.init()
+    }
 }
 
 
-class ActorRef {
+public class ActorRef {
     var actor:Actor
     var queue:dispatch_queue_t
     
@@ -55,9 +57,13 @@ class ActorRef {
     }
 }
 
-class ActorSystem {
+public class ActorSystem {
     
-    func actorOf(actor:Actor) -> ActorRef {
+    public init() {
+        
+    }
+    
+    public func actorOf(actor:Actor) -> ActorRef {
         switch(actor) {
         case is ActorUI:
             return ActorRef(actor: actor, queue: dispatch_get_main_queue())
@@ -74,7 +80,7 @@ class ActorSystem {
 
 operator infix ! {}
 
-@infix func ! (left:ActorRef, right:Any) -> Void {
+@infix public func ! (left:ActorRef, right:Any) -> Void {
     left.accept(right)
 }
 
