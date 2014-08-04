@@ -36,7 +36,7 @@ public class Actor {
 }
 
 public class ActorUI : Actor {
-    public init() {
+    override public init() {
         super.init()
     }
 }
@@ -69,7 +69,8 @@ public class ActorSystem {
             return ActorRef(actor: actor, queue: dispatch_get_main_queue())
         default:
             let name = "net.japko.actors." + actor.name
-            let queue = dispatch_queue_create(name.bridgeToObjectiveC().UTF8String, DISPATCH_QUEUE_SERIAL)
+            
+            let queue = dispatch_queue_create(name.cStringUsingEncoding(NSUTF8StringEncoding)!, DISPATCH_QUEUE_SERIAL)
             
             return ActorRef(actor: actor, queue:queue)
             
@@ -78,9 +79,9 @@ public class ActorSystem {
     
 }
 
-operator infix ! {}
+infix operator  ! {}
 
-@infix public func ! (left:ActorRef, right:Any) -> Void {
+public func ! (left:ActorRef, right:Any) -> Void {
     left.accept(right)
 }
 
