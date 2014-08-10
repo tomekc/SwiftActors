@@ -41,8 +41,7 @@ class SwactorTests: XCTestCase {
                 cashier ! Bill(amount: 200)
                 NSLog ("I am making coffee \(order.name)")
             default:
-                NSLog("Dupa")
-                
+                unhandled(message)
             }
         }
     }
@@ -57,7 +56,7 @@ class SwactorTests: XCTestCase {
             case let bill as Bill :
                 NSLog("Billing for \(bill.amount)")
             default:
-                NSLog("Dupa")
+                unhandled(message)
             }
         }
         
@@ -71,7 +70,8 @@ class SwactorTests: XCTestCase {
         
         let clintEastwood:ActorRef = acsys.actorOf(Barista(cashier:clerk))
         clintEastwood ! CoffeeOrder(name:"Latte")
-        clintEastwood ! CoffeeOrder(name:"Mocha")    
+        clintEastwood ! CoffeeOrder(name:"Mocha")
+        clintEastwood ! Bill(amount: 999)
         
     }
 }

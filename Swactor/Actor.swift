@@ -28,6 +28,10 @@ public class Actor {
         }
     }
     
+    public func unhandled(message:Any) {
+        
+    }
+    
     // You shall override this function
     public func receive(message:Any) {
         
@@ -55,6 +59,7 @@ public class ActorRef {
     func accept(message:Any) {
         self.actor.put(message)
     }
+    
 }
 
 public class ActorSystem {
