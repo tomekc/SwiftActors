@@ -15,11 +15,13 @@ public class Actor {
     var mailbox: Array<Any>
     var name:String
     var busy:Bool
+    let context:ActorSystem
     
-    public init() {
+    public init(_ ctx:ActorSystem) {
         busy = false
         mailbox = Array()
         self.name = NSString(format: "Actor-%d-%f", rand(), NSDate.timeIntervalSinceReferenceDate()) as String
+        context = ctx
     }
     
     func put(message:Any) {
@@ -40,15 +42,19 @@ public class Actor {
 }
 
 public class ActorUI : Actor {
-    override public init() {
-        super.init()
-    }
+
 }
 
 
 public class ActorRef {
     var actor:Actor
     var queue:dispatch_queue_t
+
+    public var name:String {
+        get {
+            return actor.name
+        }
+    }
     
     init(actor:Actor, queue:dispatch_queue_t) {
         self.actor = actor
@@ -81,6 +87,23 @@ public class ActorSystem {
             
         }
     }
+    
+    public func actorOf<T : Actor>(actorType:T.Type) -> ActorRef {
+        
+        NSLog("Requested actor: %@", NSStringFromClass(T))
+        
+        let actor = T(self)
+        let queueName = "net.japko.actors." + actor.name
+        
+        let queue = dispatch_queue_create(queueName.cStringUsingEncoding(NSUTF8StringEncoding)!, DISPATCH_QUEUE_SERIAL)
+        
+        return ActorRef(actor: actor, queue:queue)
+        
+
+        
+    }
+
+    
     
 }
 

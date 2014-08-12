@@ -25,20 +25,24 @@ class SwactorTests: XCTestCase {
     
     struct CoffeeOrder {
         var name:String
+        var expect:XCTestExpectation
     }
     
     class Barista : Actor {
         var cashier:ActorRef
         
-        init(cashier:ActorRef) {
-                self.cashier = cashier
+        init(context:ActorSystem) {
+            cashier = context.actorOf(Cashier.self)
+            super.init(context)
         }
         
         override func receive(message: Any) {
+            dump(message)
             switch message {
                 
             case let order as CoffeeOrder :
                 cashier ! Bill(amount: 200)
+                order.expect.fulfill()
                 NSLog ("I am making coffee \(order.name)")
             default:
                 unhandled(message)
@@ -63,15 +67,22 @@ class SwactorTests: XCTestCase {
     }
     
     func testBasic() {
+        let expectation = expectationWithDescription("Cashier actor called")
         
         let acsys = ActorSystem()
         
-        let clerk = acsys.actorOf(Cashier())
+        let clintEastwood:ActorRef = acsys.actorOf(Barista.self)
         
-        let clintEastwood:ActorRef = acsys.actorOf(Barista(cashier:clerk))
-        clintEastwood ! CoffeeOrder(name:"Latte")
-        clintEastwood ! CoffeeOrder(name:"Mocha")
+        NSLog("Created actor named: %@", clintEastwood.name)
+            
+        clintEastwood ! CoffeeOrder(name:"Latte", expect:expectation)
+        clintEastwood ! CoffeeOrder(name:"Mocha", expect:expectation)
         clintEastwood ! Bill(amount: 999)
         
+        waitForExpectationsWithTimeout(10, handler: { error in
+            //
+            NSLog("There was error")
+        })
+
     }
 }
