@@ -20,7 +20,7 @@ class SwactorTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-
+    
     
     
     struct CoffeeOrder {
@@ -31,19 +31,18 @@ class SwactorTests: XCTestCase {
     class Barista : Actor {
         var cashier:ActorRef
         
-        init(context:ActorSystem) {
-            cashier = context.actorOf(Cashier.self)
-            super.init(context)
+        required init(_ ctx: ActorSystem) {
+            cashier = ctx.actorOf(Cashier.self)
+            super.init(ctx)
         }
         
         override func receive(message: Any) {
-            dump(message)
             switch message {
                 
             case let order as CoffeeOrder :
                 cashier ! Bill(amount: 200)
-                order.expect.fulfill()
                 NSLog ("I am making coffee \(order.name)")
+                order.expect.fulfill()
             default:
                 unhandled(message)
             }
@@ -58,7 +57,7 @@ class SwactorTests: XCTestCase {
         override func receive(message: Any) {
             switch message {
             case let bill as Bill :
-                NSLog("Billing for \(bill.amount)")
+                NSLog("Billing $\(bill.amount)")
             default:
                 unhandled(message)
             }
@@ -73,16 +72,14 @@ class SwactorTests: XCTestCase {
         
         let clintEastwood:ActorRef = acsys.actorOf(Barista.self)
         
-        NSLog("Created actor named: %@", clintEastwood.name)
-            
         clintEastwood ! CoffeeOrder(name:"Latte", expect:expectation)
-        clintEastwood ! CoffeeOrder(name:"Mocha", expect:expectation)
-        clintEastwood ! Bill(amount: 999)
         
-        waitForExpectationsWithTimeout(10, handler: { error in
-            //
-            NSLog("There was error")
+        waitForExpectationsWithTimeout(10.0, handler: { error in
+            NSLog("Done")
+            if (error) {
+                NSLog("There was error %@",error)
+            }
         })
-
+        
     }
 }

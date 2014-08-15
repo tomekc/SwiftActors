@@ -17,7 +17,7 @@ public class Actor {
     var busy:Bool
     let context:ActorSystem
     
-    public init(_ ctx:ActorSystem) {
+    required public init(_ ctx:ActorSystem) {
         busy = false
         mailbox = Array()
         self.name = NSString(format: "Actor-%d-%f", rand(), NSDate.timeIntervalSinceReferenceDate()) as String
@@ -42,14 +42,19 @@ public class Actor {
 }
 
 public class ActorUI : Actor {
-
+    
 }
 
 
-public class ActorRef {
+public class ActorRef : Printable {
     var actor:Actor
     var queue:dispatch_queue_t
-
+    
+    public var description: String { get {
+        return "<ActorRef name:"+actor.name + ">"
+        }
+    }
+    
     public var name:String {
         get {
             return actor.name
@@ -74,7 +79,7 @@ public class ActorSystem {
         
     }
     
-    public func actorOf(actor:Actor) -> ActorRef {
+    public func actorOfInstance(actor:Actor) -> ActorRef {
         switch(actor) {
         case is ActorUI:
             return ActorRef(actor: actor, queue: dispatch_get_main_queue())
@@ -90,19 +95,13 @@ public class ActorSystem {
     
     public func actorOf<T : Actor>(actorType:T.Type) -> ActorRef {
         
-        NSLog("Requested actor: %@", NSStringFromClass(T))
-        
-        let actor = T(self)
+        let actor:T = actorType(self)
         let queueName = "net.japko.actors." + actor.name
         
         let queue = dispatch_queue_create(queueName.cStringUsingEncoding(NSUTF8StringEncoding)!, DISPATCH_QUEUE_SERIAL)
-        
         return ActorRef(actor: actor, queue:queue)
-        
-
-        
     }
-
+    
     
     
 }
