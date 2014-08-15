@@ -47,7 +47,7 @@ public class ActorUI : Actor {
 
 
 public class ActorRef : Printable {
-    var actor:Actor
+    public let actor:Actor
     var queue:dispatch_queue_t
     
     public var description: String { get {

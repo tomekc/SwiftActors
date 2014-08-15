@@ -25,11 +25,11 @@ class SwactorTests: XCTestCase {
     
     struct CoffeeOrder {
         var name:String
-        var expect:XCTestExpectation
+        var expect:XCTestExpectation?
     }
     
     class Barista : Actor {
-        var cashier:ActorRef
+        let cashier:ActorRef
         
         required init(_ ctx: ActorSystem) {
             cashier = ctx.actorOf(Cashier.self)
@@ -40,9 +40,9 @@ class SwactorTests: XCTestCase {
             switch message {
                 
             case let order as CoffeeOrder :
-                cashier ! Bill(amount: 200)
+                cashier ! Bill(amount: 200, expect:order.expect)
                 NSLog ("I am making coffee \(order.name)")
-                order.expect.fulfill()
+//                order.expect.fulfill()
             default:
                 unhandled(message)
             }
@@ -51,13 +51,21 @@ class SwactorTests: XCTestCase {
     
     struct Bill {
         var amount:Int
+        var expect:XCTestExpectation?
     }
     
     class Cashier : Actor {
+
+        required init(_ ctx: ActorSystem) {
+            super.init(ctx)
+        }
+        
         override func receive(message: Any) {
             switch message {
             case let bill as Bill :
                 NSLog("Billing $\(bill.amount)")
+                bill.expect?.fulfill()
+                
             default:
                 unhandled(message)
             }
@@ -66,13 +74,12 @@ class SwactorTests: XCTestCase {
     }
     
     func testBasic() {
-        let expectation = expectationWithDescription("Cashier actor called")
         
         let acsys = ActorSystem()
         
         let clintEastwood:ActorRef = acsys.actorOf(Barista.self)
         
-        clintEastwood ! CoffeeOrder(name:"Latte", expect:expectation)
+        clintEastwood ! CoffeeOrder(name:"Latte", expect:expectationWithDescription("Cashier acted"))
         
         waitForExpectationsWithTimeout(10.0, handler: { error in
             NSLog("Done")
