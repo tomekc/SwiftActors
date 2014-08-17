@@ -41,7 +41,7 @@ public class Actor {
     
 }
 
-public class ActorUI : Actor {
+public class MainThreadActor : Actor {
     
 }
 
@@ -81,7 +81,7 @@ public class ActorSystem {
     
     public func actorOfInstance(actor:Actor) -> ActorRef {
         switch(actor) {
-        case is ActorUI:
+        case is MainThreadActor:
             return ActorRef(actor: actor, queue: dispatch_get_main_queue())
         default:
             let name = "net.japko.actors." + actor.name
