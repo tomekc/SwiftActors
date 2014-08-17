@@ -75,11 +75,12 @@ public class ActorRef : Printable {
 
 public class ActorSystem {
     
+    var allActors:Dictionary<String, ActorRef> = [:]
+
     public init() {
-        
     }
     
-    public func actorOfInstance(actor:Actor) -> ActorRef {
+    func actorOfInstance(actor:Actor) -> ActorRef {
         switch(actor) {
         case is MainThreadActor:
             return ActorRef(actor: actor, queue: dispatch_get_main_queue())
@@ -94,12 +95,16 @@ public class ActorSystem {
     }
     
     public func actorOf<T : Actor>(actorType:T.Type) -> ActorRef {
+        let typeName = NSStringFromClass(T)
         
-        let actor:T = actorType(self)
-        let queueName = "net.japko.actors." + actor.name
-        
-        let queue = dispatch_queue_create(queueName.cStringUsingEncoding(NSUTF8StringEncoding)!, DISPATCH_QUEUE_SERIAL)
-        return ActorRef(actor: actor, queue:queue)
+        if let cachedActor = allActors[typeName] {
+            return cachedActor
+        } else {
+            let actor:T = actorType(self)
+            let reference = actorOfInstance(actor)
+            allActors[typeName] = reference
+            return reference
+        }
     }
     
     

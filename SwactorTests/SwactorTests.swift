@@ -89,4 +89,13 @@ class SwactorTests: XCTestCase {
         })
         
     }
+    
+    func testActorReuse() {
+        let acsys = ActorSystem()
+        
+        let actor1:ActorRef = acsys.actorOf(Barista.self)
+        let actor2:ActorRef = acsys.actorOf(Barista.self)
+        
+        XCTAssertTrue(actor1 === actor2, "Should be same instance")
+    }
 }
