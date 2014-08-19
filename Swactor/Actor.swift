@@ -30,8 +30,17 @@ public class Actor {
         }
     }
     
+    func put(message:Any, after:Int64) {
+        let when = dispatch_time(DISPATCH_TIME_NOW, after * 1000000)
+        dispatch_after(when, dispatchQueue!) {
+            self.receive(message)
+        }
+    }
+    
+    /**
+        No-op function which eats unhandled message.
+    */
     public func unhandled(message:Any) {
-        
     }
     
     // You shall override this function
@@ -67,8 +76,25 @@ public class ActorRef : Printable {
         self.queue = queue
     }
     
-    func accept(message:Any) {
+    /**
+        Send message to actor and return immediately.
+    
+        :param: message Message object (or structure) to be sent.
+    */
+    public func tell(message:Any) {
         self.actor.put(message)
+    }
+
+    /**
+        Send message to actor and return immediately. Message will be inserted into dispatch queue
+        after given amount of milliseconds.
+
+        :param: message Message object (or structure) to be sent.
+        :param: after Delay in milliseconds.
+
+    */
+    public func tell(message:Any, after:Int64) {
+        self.actor.put(message, after: after)
     }
     
 }
@@ -94,6 +120,11 @@ public class ActorSystem {
         }
     }
     
+    /**
+        Creates or retrieves cached instance of actor of given class.
+    
+        :param: actorType Class of actor, should be child of Actor.
+    */
     public func actorOf<T : Actor>(actorType:T.Type) -> ActorRef {
         let typeName = NSStringFromClass(T)
         
@@ -114,7 +145,7 @@ public class ActorSystem {
 infix operator  ! {}
 
 public func ! (left:ActorRef, right:Any) -> Void {
-    left.accept(right)
+    left.tell(right)
 }
 
 

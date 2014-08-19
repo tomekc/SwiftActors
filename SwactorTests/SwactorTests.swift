@@ -98,4 +98,17 @@ class SwactorTests: XCTestCase {
         
         XCTAssertTrue(actor1 === actor2, "Should be same instance")
     }
+    
+    func testDelayedMessage() {
+        let acsys = ActorSystem()
+        
+        let actor1:ActorRef = acsys.actorOf(Cashier.self)
+        
+        actor1.tell(Bill(amount: 100, expect: expectationWithDescription("Called after two seconds")), after: 2000)
+        
+        waitForExpectationsWithTimeout(3.0, handler: { error in
+            NSLog("Done waiting for delayed message")
+        })
+        
+    }
 }
