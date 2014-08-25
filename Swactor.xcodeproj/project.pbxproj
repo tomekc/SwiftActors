@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4010F0F319689A23001C42E7 /* Swactor.h in Headers */ = {isa = PBXBuildFile; fileRef = 4010F0F219689A23001C42E7 /* Swactor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4010F0F919689A23001C42E7 /* Swactor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4010F0ED19689A23001C42E7 /* Swactor.framework */; };
 		4010F10019689A23001C42E7 /* SwactorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010F0FF19689A23001C42E7 /* SwactorTests.swift */; };
 		4010F10A19689A3D001C42E7 /* Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010F10919689A3D001C42E7 /* Actor.swift */; };
@@ -112,7 +111,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4010F0F319689A23001C42E7 /* Swactor.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +403,7 @@
 				4010F10519689A23001C42E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4010F10619689A23001C42E7 /* Build configuration list for PBXNativeTarget "SwactorTests" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +412,7 @@
 				4010F10819689A23001C42E7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

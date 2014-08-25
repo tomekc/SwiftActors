@@ -83,7 +83,7 @@ class SwactorTests: XCTestCase {
         
         waitForExpectationsWithTimeout(10.0, handler: { error in
             NSLog("Done")
-            if (error) {
+            if ((error) != nil) {
                 NSLog("There was error %@",error)
             }
         })
