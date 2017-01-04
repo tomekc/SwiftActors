@@ -36,7 +36,7 @@ class SwactorTests: XCTestCase {
             super.init(ctx)
         }
         
-        override func receive(message: Any) {
+        override func receive(_ message: Any) {
             switch message {
                 
             case let order as CoffeeOrder :
@@ -60,7 +60,7 @@ class SwactorTests: XCTestCase {
             super.init(ctx)
         }
         
-        override func receive(message: Any) {
+        override func receive(_ message: Any) {
             switch message {
             case let bill as Bill :
                 NSLog("Billing $\(bill.amount)")
@@ -79,12 +79,12 @@ class SwactorTests: XCTestCase {
         
         let clintEastwood:ActorRef = acsys.actorOf(Barista.self)
         
-        clintEastwood ! CoffeeOrder(name:"Latte", expect:expectationWithDescription("Cashier acted"))
+        clintEastwood ! CoffeeOrder(name:"Latte", expect:expectation(description: "Cashier acted"))
         
-        waitForExpectationsWithTimeout(10.0, handler: { error in
+        waitForExpectations(timeout: 10.0, handler: { error in
             NSLog("Done")
             if ((error) != nil) {
-                NSLog("There was error %@",error)
+                print("There was error \(error.debugDescription)")
             }
         })
         
@@ -104,9 +104,9 @@ class SwactorTests: XCTestCase {
         
         let actor1:ActorRef = acsys.actorOf(Cashier.self)
         
-        actor1.tell(Bill(amount: 100, expect: expectationWithDescription("Called after two seconds")), after: 2000)
+        actor1.tell(Bill(amount: 100, expect: expectation(description: "Called after two seconds")), after: 2000)
         
-        waitForExpectationsWithTimeout(3.0, handler: { error in
+        waitForExpectations(timeout: 3.0, handler: { error in
             NSLog("Done waiting for delayed message")
         })
         
